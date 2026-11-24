@@ -8,9 +8,15 @@ public class ArenaSpawnController : NetworkBehaviour
     [SerializeField] private Transform leftSpawnPoint;
     [SerializeField] private Transform rightSpawnPoint;
 
+    [Header("Player Prefabs (Must have NetworkObject)")]
+    [SerializeField] private GameObject player1Prefab; // Host
+    [SerializeField] private GameObject player2Prefab; // Client
+
     [Header("Facing Mode")]
     [Tooltip("Enable if using a 2D side-scroller where facing left/right flips scale or Y rotation.")]
     [SerializeField] private bool is2DMode = false;
+
+    private readonly Dictionary<ulong, NetworkObject> _spawnedPlayers = new();
 
     public override void OnNetworkSpawn()
     {
@@ -19,7 +25,9 @@ public class ArenaSpawnController : NetworkBehaviour
         if (!IsServer) return;
 
         NetworkManager.OnClientConnectedCallback += HandleClientConnected;
-        PositionAllConnectedPlayers();
+        NetworkManager.OnClientDisconnectCallback += HandleClientDisconnected;
+
+        SpawnAndPositionAllConnectedPlayers();
     }
 
     public override void OnNetworkDespawn()
@@ -27,6 +35,7 @@ public class ArenaSpawnController : NetworkBehaviour
         if (IsServer && NetworkManager != null)
         {
             NetworkManager.OnClientConnectedCallback -= HandleClientConnected;
+            NetworkManager.OnClientDisconnectCallback -= HandleClientDisconnected;
         }
 
         base.OnNetworkDespawn();
@@ -35,13 +44,30 @@ public class ArenaSpawnController : NetworkBehaviour
     private void HandleClientConnected(ulong clientId)
     {
         if (!IsServer) return;
-        PositionAllConnectedPlayers();
+        SpawnAndPositionAllConnectedPlayers();
+    }
+
+    private void HandleClientDisconnected(ulong clientId)
+    {
+        if (!IsServer) return;
+
+        if (_spawnedPlayers.TryGetValue(clientId, out NetworkObject netObj))
+        {
+            if (netObj != null && netObj.IsSpawned)
+            {
+                netObj.Despawn(destroy: true);
+            }
+            _spawnedPlayers.Remove(clientId);
+        }
+
+        PositionExistingPlayers();
     }
 
     /// <summary>
-    /// Places up to two connected players on opposite sides facing each other.
+    /// Spawns player1Prefab (Host) at leftSpawnPoint and player2Prefab (Client) at rightSpawnPoint,
+    /// then faces both players toward each other.
     /// </summary>
-    public void PositionAllConnectedPlayers()
+    public void SpawnAndPositionAllConnectedPlayers()
     {
         if (!IsServer || NetworkManager == null) return;
         if (leftSpawnPoint == null || rightSpawnPoint == null) return;
@@ -49,30 +75,82 @@ public class ArenaSpawnController : NetworkBehaviour
         List<NetworkClient> clients = new List<NetworkClient>(NetworkManager.ConnectedClientsList);
         if (clients.Count == 0) return;
 
-        if (clients.Count >= 1 && clients[0].PlayerObject != null)
+        foreach (NetworkClient client in clients)
         {
-            Transform p0 = clients[0].PlayerObject.transform;
-            Vector3 p1Pos = clients.Count >= 2 && clients[1].PlayerObject != null
-                ? clients[1].PlayerObject.transform.position
-                : rightSpawnPoint.position;
+            ulong clientId = client.ClientId;
+            bool isHostClient = clientId == NetworkManager.ServerClientId;
 
-            TeleportAndFace(p0, leftSpawnPoint.position, p1Pos);
+            if (_spawnedPlayers.TryGetValue(clientId, out NetworkObject existing) && existing != null && existing.IsSpawned)
+                continue;
+
+            GameObject prefabToSpawn = isHostClient ? player1Prefab : player2Prefab;
+            Transform spawnPoint = isHostClient ? leftSpawnPoint : rightSpawnPoint;
+
+            if (prefabToSpawn == null)
+            {
+                Debug.LogWarning($"[ArenaSpawnController] Missing prefab for client {clientId} (IsHost={isHostClient}).", this);
+                continue;
+            }
+
+            NetworkObject spawned = SpawnPlayerObject(prefabToSpawn, clientId, spawnPoint.position);
+            if (spawned != null)
+            {
+                _spawnedPlayers[clientId] = spawned;
+            }
         }
 
-        if (clients.Count >= 2 && clients[1].PlayerObject != null)
-        {
-            Transform p1 = clients[1].PlayerObject.transform;
-            Vector3 p0Pos = clients[0].PlayerObject != null
-                ? clients[0].PlayerObject.transform.position
-                : leftSpawnPoint.position;
+        PositionExistingPlayers();
+    }
 
-            TeleportAndFace(p1, rightSpawnPoint.position, p0Pos);
+    private NetworkObject SpawnPlayerObject(GameObject prefab, ulong ownerClientId, Vector3 position)
+    {
+        GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+        if (!instance.TryGetComponent(out NetworkObject netObj))
+        {
+            Debug.LogError($"[ArenaSpawnController] Prefab '{prefab.name}' does not have a NetworkObject component.", instance);
+            Destroy(instance);
+            return null;
+        }
+
+        netObj.SpawnAsPlayerObject(ownerClientId, destroyWithScene: true);
+        return netObj;
+    }
+
+    public void PositionExistingPlayers()
+    {
+        if (!IsServer || NetworkManager == null) return;
+        if (leftSpawnPoint == null || rightSpawnPoint == null) return;
+
+        _spawnedPlayers.TryGetValue(NetworkManager.ServerClientId, out NetworkObject hostObj);
+
+        NetworkObject clientObj = null;
+        foreach (var kvp in _spawnedPlayers)
+        {
+            if (kvp.Key != NetworkManager.ServerClientId && kvp.Value != null)
+            {
+                clientObj = kvp.Value;
+                break;
+            }
+        }
+
+        Vector3 hostTargetPos = leftSpawnPoint.position;
+        Vector3 clientTargetPos = rightSpawnPoint.position;
+
+        if (hostObj != null && hostObj.IsSpawned)
+        {
+            Vector3 lookTarget = clientObj != null ? clientObj.transform.position : clientTargetPos;
+            TeleportAndFace(hostObj.transform, hostTargetPos, lookTarget);
+        }
+
+        if (clientObj != null && clientObj.IsSpawned)
+        {
+            Vector3 lookTarget = hostObj != null ? hostObj.transform.position : hostTargetPos;
+            TeleportAndFace(clientObj.transform, clientTargetPos, lookTarget);
         }
     }
 
     private void TeleportAndFace(Transform playerTransform, Vector3 targetPosition, Vector3 lookTargetPosition)
     {
-        // Temporarily disable CharacterController if present so position sets cleanly
         CharacterController cc = playerTransform.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
 

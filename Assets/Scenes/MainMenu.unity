@@ -1326,6 +1326,7 @@ MonoBehaviour:
   playerCardTemplate: {fileID: 9197481963319205126, guid: c6bd156fb384a7b4e9cc40b53cba1e72, type: 3}
   allAvailableMaps:
   - Arena_01
+  mainMenuSceneName: MainMenu
 --- !u!1 &1163504690
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,7 +1509,7 @@ MonoBehaviour:
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
-    ForceSamePrefabs: 1
+    ForceSamePrefabs: 0
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
