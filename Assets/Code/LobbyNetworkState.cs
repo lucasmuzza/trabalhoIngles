@@ -156,6 +156,9 @@ public class LobbyNetworkState : NetworkBehaviour
 
         if (TransitionSystem.Instance != null)
         {
+            LobbyOverlayMenuScreen lobbyOverlay = UISystem.Instance.GetScreen<LobbyOverlayMenuScreen>();
+            lobbyOverlay.Hide();
+
             TransitionSystem.Instance.BeginNetworkTransition(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
         else if (IsServer && NetworkManager.Singleton != null)
