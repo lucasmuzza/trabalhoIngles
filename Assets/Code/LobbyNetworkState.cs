@@ -147,7 +147,6 @@ public class LobbyNetworkState : NetworkBehaviour
         SteamManager.Instance?.CurrentLobby?.SetJoinable(false);
 
         BeginMatchTransitionClientRpc(new FixedString64Bytes("Gameplay"));
-
     }
 
     [Rpc(SendTo.Everyone)]
@@ -155,11 +154,9 @@ public class LobbyNetworkState : NetworkBehaviour
     {
         string sceneName = targetScene.ToString();
 
-        Debug.Log(sceneName);
-
         if (TransitionSystem.Instance != null)
         {
-            TransitionSystem.Instance.LoadScene(sceneName);
+            TransitionSystem.Instance.BeginNetworkTransition(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         }
         else if (IsServer && NetworkManager.Singleton != null)
         {

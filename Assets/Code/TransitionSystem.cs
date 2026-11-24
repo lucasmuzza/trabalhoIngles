@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityConsole;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,7 @@ public class TransitionSystem : MonoBehaviour
 
     public string CurrentGameplayScene { get; private set; }
     private bool isTransitioning;
+    private bool subscribedToNetSceneManager;
 
     private void Awake()
     {
@@ -25,17 +27,108 @@ public class TransitionSystem : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 
     private void Start()
     {
         fadeSystem = FadeSystem.Instance;
+        TrySubscribeToNetcodeSceneEvents();
+    }
+
+    private void Update()
+    {
+        if (!subscribedToNetSceneManager)
+            TrySubscribeToNetcodeSceneEvents();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
+            {
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= HandleNetSceneLoadCompleted;
+                NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleNetSceneEvent;
+            }
+            Instance = null;
+        }
+    }
+
+    private void TrySubscribeToNetcodeSceneEvents()
+    {
+        if (subscribedToNetSceneManager) return;
+        if (NetworkManager.Singleton == null || NetworkManager.Singleton.SceneManager == null) return;
+
+        NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += HandleNetSceneLoadCompleted;
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleNetSceneEvent;
+        subscribedToNetSceneManager = true;
     }
 
     public void SetInitialGameplayScene(string sceneName)
     {
         CurrentGameplayScene = sceneName;
+    }
+
+    /// <summary>
+    /// Called on all peers when the network match transition begins: fades to black
+    /// and, on the server, triggers Netcode's synchronized scene load.
+    /// </summary>
+    public void BeginNetworkTransition(string targetSceneName, LoadSceneMode loadMode = LoadSceneMode.Single)
+    {
+        if (string.IsNullOrEmpty(targetSceneName) || isTransitioning)
+            return;
+
+        StartCoroutine(NetworkTransitionRoutine(targetSceneName, loadMode));
+    }
+
+    private IEnumerator NetworkTransitionRoutine(string targetSceneName, LoadSceneMode loadMode)
+    {
+        isTransitioning = true;
+
+        if (fadeSystem != null)
+        {
+            fadeSystem.FadeIn(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer && NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene(targetSceneName, loadMode);
+        }
+    }
+
+    private void HandleNetSceneEvent(SceneEvent sceneEvent)
+    {
+        if (sceneEvent.SceneEventType == SceneEventType.LoadComplete)
+        {
+            if (!string.IsNullOrEmpty(sceneEvent.SceneName))
+                CurrentGameplayScene = sceneEvent.SceneName;
+        }
+    }
+
+    private void HandleNetSceneLoadCompleted(
+        string sceneName,
+        LoadSceneMode loadSceneMode,
+        System.Collections.Generic.List<ulong> clientsCompleted,
+        System.Collections.Generic.List<ulong> clientsTimedOut)
+    {
+        if (!string.IsNullOrEmpty(sceneName))
+            CurrentGameplayScene = sceneName;
+
+        StartCoroutine(FinishFadeRoutine());
+    }
+
+    private IEnumerator FinishFadeRoutine()
+    {
+        if (fadeSystem != null)
+        {
+            fadeSystem.FadeOut(fadeDuration);
+            yield return new WaitForSeconds(fadeDuration);
+        }
+
+        isTransitioning = false;
     }
 
     [ConsoleCommand(name: "load_scene", description: "Carrega a cena com o nome passado ex MainMenu")]
@@ -52,19 +145,27 @@ public class TransitionSystem : MonoBehaviour
             return;
         }
 
+        if (string.IsNullOrEmpty(CurrentGameplayScene))
+        {
+            string activeScene = SceneManager.GetActiveScene().name;
+            if (!string.IsNullOrEmpty(activeScene) && activeScene != targetSceneName)
+            {
+                CurrentGameplayScene = activeScene;
+            }
+            else
+            {
+                Debug.LogError("[TransitionSystem]: Não é possível mudar de cena porque a cena atual não foi definida!");
+                return;
+            }
+        }
+
         if (isTransitioning || CurrentGameplayScene == targetSceneName)
             return;
 
-        if (string.IsNullOrEmpty(CurrentGameplayScene))
-        {
-            Debug.LogError("[TransitionSystem]: Não é possível mudar de cena porque a cena atual não foi definida!");
-            return;
-        }
-
-        StartCoroutine(TransitionRoutine(CurrentGameplayScene, targetSceneName, onComplete));
+        StartCoroutine(LocalTransitionRoutine(CurrentGameplayScene, targetSceneName, onComplete));
     }
 
-    private IEnumerator TransitionRoutine(string oldScene, string newScene, Action onComplete)
+    private IEnumerator LocalTransitionRoutine(string oldScene, string newScene, Action onComplete)
     {
         isTransitioning = true;
 
@@ -74,7 +175,6 @@ public class TransitionSystem : MonoBehaviour
             yield return new WaitForSeconds(fadeDuration);
         }
 
-        Debug.Log($"[TransitionSystem]: Descarregando cena antiga assincronamente: {oldScene}");
         AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(oldScene);
         if (unloadOp != null)
         {
@@ -82,7 +182,6 @@ public class TransitionSystem : MonoBehaviour
                 yield return null;
         }
 
-        Debug.Log($"[TransitionSystem]: Carregando nova cena de forma aditiva: {newScene}");
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(newScene, LoadSceneMode.Additive);
         if (loadOp != null)
         {
@@ -105,7 +204,6 @@ public class TransitionSystem : MonoBehaviour
         }
 
         isTransitioning = false;
-        Debug.Log($"[TransitionSystem]: Transição para a cena '{newScene}' concluída com sucesso.");
         onComplete?.Invoke();
     }
 }
