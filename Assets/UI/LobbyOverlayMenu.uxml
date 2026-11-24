@@ -1,0 +1,37 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/LobbyOverlayMenu.uss?fileID=7433441132597879392&amp;guid=c971fdd02f66dfa4c943cd6d8f08bd45&amp;type=3#LobbyOverlayMenu"/>
+    <ui:VisualElement name="root" class="root" style="display: none; background-color: rgba(0, 0, 0, 0.48);">
+        <ui:VisualElement name="mainContainer" class="main-container" style="flex-grow: 1; max-height: 75%;">
+            <ui:VisualElement name="header" class="header">
+                <ui:Label name="lobbyTitle" text="LOBBY" class="header__title"/>
+                <ui:VisualElement name="lobbyCodeBox" class="code-box">
+                    <ui:Label text="CODE" class="code-box__caption"/>
+                    <ui:Label name="lobbyCodeLabel" text="------" class="code-box__value"/>
+                    <ui:Button name="copyLobbyCodeButton" text="Copiar" class="btn btn--small"/>
+                    <ui:Button name="toggleCodeVisibilityButton" text="Ocultar" class="btn btn--small btn--ghost"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="tabBar" class="tab-bar">
+                <ui:Label name="lobbyTabLabel" text="Lobby" class="tab tabSelected"/>
+                <ui:Label name="lobbySettingsTabLabel" text="Settings" class="tab" style="display: none;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="panels" class="panels">
+                <ui:VisualElement name="lobbyPanel" class="panel">
+                    <ui:VisualElement class="panel__heading-row">
+                        <ui:Label text="Players" class="panel__heading"/>
+                        <ui:Label name="playerCountLabel" text="0 / 2" class="panel__counter"/>
+                    </ui:VisualElement>
+                    <ui:ScrollView name="playerList" class="player-list"/>
+                    <ui:Label name="emptyListLabel" text="Waiting for players..." class="player-list__empty"/>
+                    <ui:VisualElement class="panel__actions">
+                        <ui:Label name="waitingHint" text="Share the code so your opponent can join." class="hint"/>
+                        <ui:Button name="readyButton" text="READY" class="btn btn--primary"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="lobbySettingsPanel" class="panel" style="display: none;">
+                    <ui:Label text="Lobby Settings" class="panel__heading"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

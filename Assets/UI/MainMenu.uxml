@@ -1,0 +1,31 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/USS/MainMenuUSS.uss?fileID=7433441132597879392&amp;guid=032dcdcb12af4d840b0a8578044ae939&amp;type=3#MainMenuUSS"/>
+
+    <ui:VisualElement name="root" style="flex-grow: 1; align-self: flex-start; justify-content: center; flex-direction: row;">
+        <ui:VisualElement name="buttonsContainer" style="flex-grow: 1; align-self: center; justify-content: center; width: 350px; min-height: 260px; padding-left: 50px;">
+            <ui:Button text="Create Lobby" name="createLobbyButton" class="mainMenuButtons" style="-unity-font-definition: url(&quot;project://database/Assets/Art/boldpixels.ttf?fileID=12800000&amp;guid=fb78fe34dbd10594e96395a4fe9f3e4c&amp;type=3#boldpixels&quot;); align-self: flex-start;"/>
+            <ui:Button text="Join Lobby" name="joinLobbyButton" class="mainMenuButtons" style="-unity-font-definition: url(&quot;project://database/Assets/Art/boldpixels.ttf?fileID=12800000&amp;guid=fb78fe34dbd10594e96395a4fe9f3e4c&amp;type=3#boldpixels&quot;); align-self: flex-start;"/>
+            <ui:Button text="Quit" name="quitButton" class="mainMenuButtons" style="align-self: flex-start;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="titleContainer" style="flex-grow: 0; width: 800px; padding-top: 100px;">
+            <ui:Label text="A.F.G" style="-unity-font-definition: url(&quot;project://database/Assets/Art/boldpixels.ttf?fileID=12800000&amp;guid=fb78fe34dbd10594e96395a4fe9f3e4c&amp;type=3#boldpixels&quot;); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 162px; color: rgb(51, 50, 61); -unity-text-align: middle-center;"/>
+            <ui:Label text="Adverbs Fighting Game" style="-unity-font-definition: url(&quot;project://database/Assets/Art/boldpixels.ttf?fileID=12800000&amp;guid=fb78fe34dbd10594e96395a4fe9f3e4c&amp;type=3#boldpixels&quot;); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 65px; color: rgb(51, 50, 61); -unity-text-align: upper-center;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- JOIN LOBBY POPUP (sibling of #root so the backdrop covers the whole screen) -->
+    <ui:VisualElement name="joinPanel" class="popup-backdrop" style="display: none;">
+        <ui:VisualElement name="joinCard" class="popup-card">
+            <ui:Label text="JOIN LOBBY" class="popup-card__title" style="-unity-font-definition: url(&quot;project://database/Assets/Art/boldpixels.ttf?fileID=12800000&amp;guid=fb78fe34dbd10594e96395a4fe9f3e4c&amp;type=3#boldpixels&quot;);"/>
+            <ui:Label text="Enter the code your friend shared with you." class="popup-card__subtitle"/>
+
+            <ui:TextField name="joinCodeField" max-length="6" placeholder-text="------" class="join-code-field"/>
+            <ui:Label name="joinErrorLabel" text="" class="popup-card__error" style="display: none;"/>
+
+            <ui:VisualElement class="popup-card__actions">
+                <ui:Button text="Cancel" name="cancelJoinButton" class="popup-btn popup-btn--ghost"/>
+                <ui:Button text="Join" name="confirmJoinButton" class="popup-btn popup-btn--primary"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

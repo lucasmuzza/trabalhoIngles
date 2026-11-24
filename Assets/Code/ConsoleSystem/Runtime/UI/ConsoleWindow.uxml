@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" schemaLocation="UnityEngine.UIElements ../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/Modules/ConsoleSystem/Runtime/UI/ConsoleStyles.uss?fileID=7433441132597879392&amp;guid=c3ec31287325dea419e4bdaf4b8a93f2&amp;type=3#ConsoleStyles"/>
+    <ui:VisualElement name="ConsoleContainer" class="console-container" style="flex-direction: column; display: none;">
+        <ui:VisualElement name="ConsoleHeader" class="console-header" style="flex-shrink: 0;">
+            <ui:Label text="Developer Console" class="header-title"/>
+            <ui:Button text="X" name="CloseButton" class="close-button"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ConsoleMain" style="flex-grow: 1;">
+            <ui:ScrollView name="LogArea" class="log-area"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ConsoleBottom" style="flex-grow: 0; background-color: rgb(28, 32, 40); position: relative;">
+            <ui:VisualElement name="AutocompleteBox" class="autocomplete-box">
+                <ui:ListView name="SuggestionList" fixed-item-height="24" focusable="false" class="suggestion-list"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="InputBar" class="input-bar">
+                <ui:Label text="&gt;" class="prefix-label"/>
+                <ui:TextField name="CommandInput" picking-mode="Ignore" class="command-input"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ResizeHandle" class="resize-handle"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

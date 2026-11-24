@@ -1,0 +1,211 @@
+.console-container {
+    min-width: 450px;
+    min-height: 300px;
+    width: 650px;
+    height: 450px;
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    background-color: rgba(20, 22, 28, 0.96); /* Tom escuro elegante estilo CS2 */
+    border-width: 1px;
+    border-color: rgb(45, 50, 60);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Header Superior Estilo CS2 */
+.console-header {
+    height: 32px;
+    background-color: rgb(28, 32, 40);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 12px;
+    padding-right: 6px;
+    border-bottom-width: 1px;
+    border-color: rgb(45, 50, 60);
+    cursor: move;
+}
+
+.header-title {
+    -unity-font-style: bold;
+    color: rgb(220, 225, 235);
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.close-button {
+    background-color: transparent;
+    border-width: 0px;
+    color: rgb(150, 160, 175);
+    -unity-font-style: bold;
+    width: 26px;
+    height: 26px;
+    border-radius: 3px;
+}
+
+.close-button:hover {
+    background-color: rgb(210, 45, 45);
+    color: white;
+}
+
+/* Alça de Redimensionamento nítida no canto inferior direito */
+.resize-handle {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: transparent;
+    cursor: resize-se;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-color: rgb(120, 130, 150);
+    border-bottom-right-radius: 2px;
+}
+
+.resize-handle:hover {
+    border-color: rgb(0, 160, 255);
+}
+
+/* Toolbar de Opções */
+.console-toolbar {
+    height: 30px;
+    background-color: rgb(32, 36, 46);
+    flex-direction: row;
+    align-items: center;
+    padding-left: 8px;
+    border-bottom-width: 1px;
+    border-color: rgb(45, 50, 60);
+}
+
+.toolbar-button {
+    background-color: rgb(45, 51, 64);
+    border-width: 1px;
+    border-color: rgb(60, 68, 85);
+    color: rgb(210, 215, 225);
+    padding: 3px 14px;
+    margin-right: 6px;
+    font-size: 11px;
+    border-radius: 3px;
+}
+
+.toolbar-button:hover {
+    background-color: rgb(60, 68, 85);
+}
+
+.toolbar-button:active {
+    background-color: rgb(35, 40, 50);
+}
+
+.toggle-button.active {
+    background-color: rgb(0, 120, 215);
+    border-color: rgb(0, 140, 230);
+    color: white;
+}
+
+/* Área de Logs com alta legibilidade */
+.log-area {
+    flex-grow: 1;
+    padding: 10px;
+    background-color: rgba(15, 17, 22, 0.95);
+}
+
+.log-item {
+    padding: 3px 6px;
+    margin-bottom: 2px;
+    border-radius: 2px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.log-normal {
+    color: rgb(215, 220, 230); /* Cor clara legível para os logs */
+}
+
+.log-warning {
+    color: rgb(255, 204, 0);
+    background-color: rgba(255, 204, 0, 0.08);
+}
+
+.log-error {
+    color: rgb(255, 75, 75);
+    background-color: rgba(255, 51, 51, 0.1);
+}
+
+.log-counter {
+    background-color: rgb(45, 50, 60);
+    color: rgb(240, 240, 240);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    margin-left: 8px;
+    -unity-font-style: bold;
+}
+
+/* Caixa Flutuante do Autocomplete */
+.autocomplete-box {
+    position: absolute;
+    bottom: 42px;
+    left: 10px;
+    right: 10px;
+    background-color: rgb(25, 28, 36);
+    border-width: 1px;
+    border-color: rgb(60, 70, 90);
+    border-radius: 4px;
+    max-height: 160px;
+    display: none;
+    overflow: hidden;
+}
+
+.suggestion-list {
+    flex-grow: 1;
+    background-color: transparent;
+}
+
+.suggestion-item-label {
+    padding-left: 8px;
+    padding-right: 8px;
+    height: 24px;
+    -unity-text-align: middle-left;
+    color: rgb(210, 215, 225);
+}
+
+.suggestion-item-label:hover {
+    background-color: rgb(45, 50, 60);
+}
+
+/* Barra de Entrada de Comando Estilo CS2 (Escura e Fluida) */
+.input-bar {
+    flex-direction: row;
+    height: 38px;
+    align-items: center;
+    padding-left: 12px;
+    padding-right: 25px; /* Espaço para não encobrir a alça de redimensionamento */
+    background-color: rgb(22, 25, 32); /* Fundo escuro uniforme */
+    border-top-width: 1px;
+    border-top-color: rgb(45, 50, 60);
+}
+
+.prefix-label {
+    margin-right: 8px;
+    font-size: 15px;
+    color: rgb(0, 200, 100); /* Verde vibrante clássico de terminal */
+    -unity-font-style: bold;
+}
+
+.command-input {
+    flex-grow: 1;
+    background-color: transparent;
+    border-width: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Texto digitado pelo usuário claro e visível */
+.command-input .unity-text-field__input {
+    color: rgb(240, 245, 250);
+    background-color: transparent;
+    border-width: 0px;
+}

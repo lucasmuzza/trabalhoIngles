@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualizationRoot" picking-mode="Ignore" style="flex-grow: 1; justify-content: space-between; padding-top: 28px; padding-bottom: 28px; padding-left: 36px; padding-right: 36px; display: none;">
+        <ui:VisualElement name="TopHudBar" picking-mode="Ignore" style="flex-direction: row; justify-content: space-between; align-items: center;">
+            <ui:Label name="ScoreLabel" text="Host: 0  |  Challenger: 0" picking-mode="Ignore" style="font-size: 22px; color: rgb(255, 255, 255); background-color: rgba(15, 20, 30, 0.78); padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;"/>
+            <ui:Label name="StatusLabel" text="Type the adverb and press ENTER" picking-mode="Ignore" style="font-size: 20px; color: rgb(255, 224, 102); background-color: rgba(15, 20, 30, 0.78); padding-left: 16px; padding-right: 16px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ChallengeCard" picking-mode="Ignore" style="align-self: center; align-items: center; background-color: rgba(15, 20, 30, 0.85); padding-left: 32px; padding-right: 32px; padding-top: 24px; padding-bottom: 24px; border-top-left-radius: 14px; border-top-right-radius: 14px; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgba(255, 255, 255, 0.16); border-right-color: rgba(255, 255, 255, 0.16); border-top-color: rgba(255, 255, 255, 0.16); border-bottom-color: rgba(255, 255, 255, 0.16); max-width: 820px; top: -425px;">
+            <ui:Label name="PhraseLabel" text="She runs _____ in the morning." picking-mode="Ignore" style="font-size: 32px; color: rgb(255, 255, 255); unity-text-align: middle-center; white-space: normal; margin-bottom: 16px;"/>
+            <ui:VisualElement name="InputPreviewRow" picking-mode="Ignore" style="flex-direction: row; align-items: center;">
+                <ui:Label text="Your adverb: " picking-mode="Ignore" style="font-size: 22px; color: rgb(180, 190, 210); margin-right: 8px;"/>
+                <ui:Label name="CurrentInputLabel" text="_ (type adverb)" picking-mode="Ignore" style="font-size: 24px; color: rgb(110, 231, 183); background-color: rgba(255, 255, 255, 0.08); padding-left: 14px; padding-right: 14px; padding-top: 6px; padding-bottom: 6px; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="FooterHint" picking-mode="Ignore" style="align-self: center;">
+            <ui:Label text="Type letters • Backspace to erase • Enter to submit" picking-mode="Ignore" style="font-size: 16px; color: rgba(226, 232, 240, 0.78);"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

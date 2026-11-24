@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="LobbyOverlayMenu.uss" />
+
+    <ui:VisualElement name="playerCard" class="player-card">
+        <ui:VisualElement name="avatarFrame" class="avatar-frame">
+            <ui:Image name="avatarImage" class="avatar-image" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="player-info">
+            <ui:Label name="playerName" text="Player" class="player-info__name" />
+            <ui:Label name="roleTag" text="HOST" class="player-info__tag" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="readyBadge" class="ready-badge">
+            <ui:VisualElement name="readyDot" class="ready-badge__dot" />
+            <ui:Label name="readyLabel" text="Not ready" class="ready-badge__label" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

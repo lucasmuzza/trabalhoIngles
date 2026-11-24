@@ -1,0 +1,133 @@
+:root {
+}
+
+.mainMenuButtons {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 20px;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    width: 200px;
+    height: 100px;
+    max-height: 50px;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/Art/boldpixels.ttf?fileID=12800000&guid=fb78fe34dbd10594e96395a4fe9f3e4c&type=3#boldpixels");
+    font-size: 25px;
+    -unity-text-align: middle-center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: rgb(51, 50, 61);
+    background-color: rgb(245, 241, 220);
+}
+
+/* Full-screen dim layer, anchored to the UIDocument root */
+.popup-backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(51, 50, 61, 0.55);
+}
+
+.popup-card {
+    width: 460px;
+    padding: 26px 30px 22px 30px;
+    background-color: rgba(94, 84, 72, 0.97);
+    border-radius: 14px;
+    border-width: 2px;
+    border-color: rgb(148, 168, 206);
+}
+
+.popup-card__title {
+    font-size: 34px;
+    letter-spacing: 4px;
+    color: rgb(245, 240, 220);
+    -unity-text-align: middle-center;
+}
+
+.popup-card__subtitle {
+    margin-top: 4px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: rgb(184, 180, 204);
+    -unity-text-align: middle-center;
+}
+
+/* Code input */
+.join-code-field {
+    margin: 0;
+}
+
+.join-code-field > .unity-base-text-field__input {
+    height: 56px;
+    padding: 0 12px;
+    font-size: 30px;
+    letter-spacing: 10px;
+    color: rgb(127, 227, 176);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    background-color: rgba(70, 62, 54, 0.95);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgba(148, 168, 206, 0.5);
+}
+
+.join-code-field:focus > .unity-base-text-field__input {
+    border-color: rgb(245, 240, 220);
+}
+
+.popup-card__error {
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgb(214, 120, 120);
+    -unity-text-align: middle-center;
+}
+
+/* Buttons */
+.popup-card__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.popup-btn {
+    min-width: 120px;
+    margin: 0 0 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-width: 0;
+    border-radius: 8px;
+    -unity-font-style: bold;
+    transition-property: background-color, scale;
+    transition-duration: 0.12s;
+}
+
+.popup-btn:active {
+    scale: 0.96 0.96;
+}
+
+.popup-btn--primary {
+    color: rgb(70, 62, 54);
+    background-color: rgb(207, 169, 156);
+}
+
+.popup-btn--primary:hover {
+    background-color: rgb(219, 198, 160);
+}
+
+.popup-btn--ghost {
+    color: rgb(245, 240, 220);
+    background-color: rgba(245, 240, 220, 0.12);
+}
+
+.popup-btn--ghost:hover {
+    background-color: rgba(245, 240, 220, 0.28);
+}
